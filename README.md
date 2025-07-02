@@ -53,6 +53,34 @@ Access jenkins UI at: serverip:8080
 
 
 
+## Minikube and docker Installation
+---
+
+Reference: [minikube installation](https://minikube.sigs.k8s.io/docs/start/?arch=%2Flinux%2Fx86-64%2Fstable%2Fbinary+download)
+
+#### Commands to install
+=============================
+
+sudo apt-get install docker.io -y
+
+snap install kubectl --classic
+
+curl -LO https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-amd64
+
+sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
+
+minikube version
+
+minikube start --driver=docker --force
+
+kubectl get nodes
+
+kubectl get pods
+
+![image](https://github.com/user-attachments/assets/7d73ec2a-96bd-4672-8639-03be4d47caac)
+
+
+================================
 
 
 
