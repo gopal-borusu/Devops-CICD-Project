@@ -72,9 +72,11 @@ curl -LO https://github.com/kubernetes/minikube/releases/latest/download/minikub
 
 sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
 
+sudo su - jenkins
+
 minikube version
 
-minikube start --driver=docker --force
+minikube start --driver=docker --force --ports=32767:32767   #(Starting minikube as jenkins user and we are mapping our server port 32767 with minikube port 32767 to acess the application once built)
 
 kubectl get nodes
 
@@ -86,9 +88,54 @@ kubectl get pods
 ================================
 
 
+## Jenkins plugins installation & credentials configuration
+---
+
+1) add jenkins user to docker group  ----> sudo usermod -aG docker jenkins;id jenkins
+2) Go to jenkins UI ---> Manage Jenkins --> Plugins ---> Available Plugins, and install below plugins
+   
+     (i) Docker Pipeline
+3) restart the jenkins service -----> sudo systemctl restart jenkins
+4) Go to jenkins UI ---> Manage Jenkins --> Credentials --> click global --> Add Credentials
+
+  Give Your Docker Hub Credentials (Do not change the name of ID) and click on create
+  
+  ![image](https://github.com/user-attachments/assets/7689a307-bf4f-4c5d-a396-fefce704b341)
+
+5) Click again on add credentials and give below mentioned details. (You should upload the contents of kubeconfig file here which can be found at cat ~/.kube/config)
+
+![image](https://github.com/user-attachments/assets/7ec573f8-f44b-40eb-a440-6c6fe2a78755)
 
 
 
+## Jenkins Pipeline creation
+---
+
+1) Go to Jenkins home page--> New item, provide below details and click ok
+
+     i) Name: anything
+     ii) item type: Pipeline  
+2) Provide Description if you want and scroll down to pipeline section
+3) In Triggers select "GitHub hook trigger for GITScm polling" option.
+4) In Definition select "pipeline from SCM" and SCM as "GIT"
+5) Provide the repository URL (in my case it is https://github.com/gopal-borusu/Devops-CICD-Project)
+6) In branch specifier select branch name. (in my case it is main)
+7) In Scriptpath provide the name of the jenkinsfile as present in your github (in my case it is Jenkinsfile)
+8) Leave everything else as default and click on save.
+9) You can see the pipeline got created.
+10) Enable webhook in the github repository by going to repository --> settings --> webhhok --> add webhook
+  
+      i) give repository url as your jenkins url
+    
+      ii) content type "application/json"
+    
+      iii) Which events would you like to trigger this webhook? ---> Just the push event
+    
+      iv) chackmark the Active box and click Add Webhook.
+
+---
+
+We have completed configuring our CI/CD pipeline. If we commit any changes to the repo then it will trigger the pipeline automatically which in turn will create new docker image and push it to docker hub. The new image will then be used to deploy to kubernetes.
 
 
 
