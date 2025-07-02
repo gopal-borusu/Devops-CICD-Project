@@ -1,6 +1,9 @@
 # Devops-CICD-Project
 Apache Web Server setup with a CI/CD pipeline using Jenkins, Docker, Kubernetes, and AWS EC2.
 
+![AWS EC2 Instance](https://github.com/user-attachments/assets/83e1f581-bf7a-46f8-ad21-ab103a2c570e)
+
+
 
 ## AWS Instance Creation
 ---
