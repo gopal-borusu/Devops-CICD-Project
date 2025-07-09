@@ -138,4 +138,36 @@ kubectl get pods
 We have completed configuring our CI/CD pipeline. If we commit any changes to the repo then it will trigger the pipeline automatically which in turn will create new docker image and push it to docker hub. The new image will then be used to deploy to kubernetes.
 
 
+## Testing
+
+Let us make our first commit to github branch and see whether the jenkins pipeline is getting triggered.
+
+commit screenshot
+
+jenkins screenshot
+
+docker hub screenshot
+
+kubernetes pod screenshot
+
+website screenshot
+
+
+Now, let us make one more commit and see whther the new changes are reflecting or not.
+
+commit screenshot
+
+jenkins screenshot
+
+docker hub screenshot
+
+kubernetes pod screenshot
+
+website screenshot
+
+
+As we can see, whenever a new commit is done to the github branch it is automatically triggering the jenkins pipeline and executing the required actions.
+
+
+
 
