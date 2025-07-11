@@ -66,11 +66,13 @@ Reference: [minikube installation](https://minikube.sigs.k8s.io/docs/start/?arch
 
 sudo apt-get install docker.io -y
 
-snap install kubectl --classic
+sudo snap install kubectl --classic
 
 curl -LO https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-amd64
 
 sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
+
+sudo usermod -aG docker jenkins;id jenkins (add jenkins user to docker group)
 
 sudo su - jenkins
 
@@ -91,18 +93,17 @@ kubectl get pods
 ## Jenkins plugins installation & credentials configuration
 ---
 
-1) add jenkins user to docker group  ----> sudo usermod -aG docker jenkins;id jenkins
-2) Go to jenkins UI ---> Manage Jenkins --> Plugins ---> Available Plugins, and install below plugins
+1) Go to jenkins UI ---> Manage Jenkins --> Plugins ---> Available Plugins, and install below plugins
    
      (i) Docker Pipeline
-3) restart the jenkins service -----> sudo systemctl restart jenkins
-4) Go to jenkins UI ---> Manage Jenkins --> Credentials --> click global --> Add Credentials
+2) restart the jenkins service -----> sudo systemctl restart jenkins
+3) Go to jenkins UI ---> Manage Jenkins --> Credentials --> click global --> Add Credentials
 
   Give Your Docker Hub Credentials (Do not change the name of ID) and click on create
   
   ![image](https://github.com/user-attachments/assets/7689a307-bf4f-4c5d-a396-fefce704b341)
 
-5) Click again on add credentials and give below mentioned details. (You should upload the contents of kubeconfig file here which can be found at cat ~/.kube/config)
+4) Click again on add credentials and give below mentioned details. (You should upload the contents of kubeconfig file here which can be found at cat ~/.kube/config)
 
 ![image](https://github.com/user-attachments/assets/7ec573f8-f44b-40eb-a440-6c6fe2a78755)
 
@@ -141,6 +142,40 @@ We have completed configuring our CI/CD pipeline. If we commit any changes to th
 ## Testing
 
 Let us make our first commit to github branch and see whether the jenkins pipeline is getting triggered.
+
+<img width="305" height="47" alt="image" src="https://github.com/user-attachments/assets/ad98ebc5-dbeb-4037-9be1-e57d28f6f313" />
+
+
+<img width="712" height="455" alt="image" src="https://github.com/user-attachments/assets/051c5560-2f69-4302-b303-2986f0591f31" />
+
+
+<img width="937" height="276" alt="image" src="https://github.com/user-attachments/assets/3f5bc463-3ce1-4f58-94dc-8cf84e93ddf7" />
+
+<img width="893" height="438" alt="image" src="https://github.com/user-attachments/assets/1726037b-027f-4ba0-bbba-944aba5d2959" />
+
+
+<img width="562" height="169" alt="image" src="https://github.com/user-attachments/assets/1e57ea92-84c4-40f3-94dd-c9474e0606af" />
+
+
+
+<img width="952" height="278" alt="image" src="https://github.com/user-attachments/assets/a8a5655c-6809-43f1-8203-f26d767e06fe" />
+
+
+<img width="727" height="366" alt="image" src="https://github.com/user-attachments/assets/4a4ce3a8-7016-4b42-9a8d-da32edc5e7af" />
+
+<img width="943" height="365" alt="image" src="https://github.com/user-attachments/assets/b30dc33a-51e4-4f53-a75d-ed4daa73db35" />
+
+
+<img width="922" height="400" alt="image" src="https://github.com/user-attachments/assets/db886494-9997-44f9-a0b0-597f5bf5f906" />
+
+
+<img width="566" height="185" alt="image" src="https://github.com/user-attachments/assets/dd24f7aa-e9f6-4e47-be5b-0e661b3f2ae5" />
+
+
+<img width="953" height="271" alt="image" src="https://github.com/user-attachments/assets/b27d934d-c203-4fea-8e21-8d6d42e04655" />
+
+<img width="935" height="421" alt="image" src="https://github.com/user-attachments/assets/38d2da1e-38f6-41f6-a9f3-d27fe4fdd289" />
+
 
 commit screenshot
 
