@@ -21,24 +21,22 @@ Note: Allow HTTP and SSH Traffic
 ---
 reference: [jenkins documentation](https://www.jenkins.io/doc/book/installing/linux/)
 
-#### Commands to install
-=============================
+### Commands to install
 
-sudo apt update
+    sudo apt update
 
-sudo apt install fontconfig openjdk-21-jre -y
+    sudo apt install fontconfig openjdk-21-jre -y
 
-java -version
+    java -version
 
-sudo wget -O /etc/apt/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+    sudo wget -O /etc/apt/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
 
-echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc]" https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+    echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc]" https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
 
-sudo apt-get update
+    sudo apt-get update
 
-sudo apt-get install jenkins -y
+    sudo apt-get install jenkins -y
 
-================================
 
 Note: You need to access to port 8080 on which jenkins runs by default. Edit inbound traffic rules and add a rule to allow TCP traffic from port 8080.
 
@@ -62,50 +60,48 @@ Access jenkins UI at: serverip:8080
 Reference: [minikube installation](https://minikube.sigs.k8s.io/docs/start/?arch=%2Flinux%2Fx86-64%2Fstable%2Fbinary+download)
 
 #### Commands to install
-=============================
 
-sudo apt-get install docker.io -y
+    sudo apt-get install docker.io -y
 
-sudo snap install kubectl --classic
+    sudo snap install kubectl --classic
 
-curl -LO https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-amd64
+    curl -LO https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-amd64
 
-sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
+    sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
 
-sudo usermod -aG docker jenkins;id jenkins (add jenkins user to docker group)
+    sudo usermod -aG docker jenkins;id jenkins #(add jenkins user to docker group)
 
-sudo su - jenkins
+    sudo su - jenkins
 
-minikube version
+    minikube version
 
-minikube start --driver=docker --force --ports=32767:32767   #(Starting minikube as jenkins user and we are mapping our server port 32767 with minikube port 32767 to acess the application once built)
+    minikube start --driver=docker --force --ports=32767:32767   #(Starting minikube as jenkins user and we are mapping our server port 32767 with minikube port 32767 to acess the application once built)
 
-kubectl get nodes
+    kubectl get nodes
 
-kubectl get pods
+    kubectl get pods
 
-![image](https://github.com/user-attachments/assets/7d73ec2a-96bd-4672-8639-03be4d47caac)
+  ![image](https://github.com/user-attachments/assets/7d73ec2a-96bd-4672-8639-03be4d47caac)
 
-
-================================
 
 
 ## Jenkins plugins installation & credentials configuration
----
 
 1) Go to jenkins UI ---> Manage Jenkins --> Plugins ---> Available Plugins, and install below plugins
+   (i) Docker Pipeline
+2) restart the jenkins service.
+
+       sudo systemctl restart jenkins
    
-     (i) Docker Pipeline
-2) restart the jenkins service -----> sudo systemctl restart jenkins
 3) Go to jenkins UI ---> Manage Jenkins --> Credentials --> click global --> Add Credentials
 
-  Give Your Docker Hub Credentials (Do not change the name of ID) and click on create
+   Give Your Docker Hub Credentials (Do not change the name of ID) and click on create
   
-  ![image](https://github.com/user-attachments/assets/7689a307-bf4f-4c5d-a396-fefce704b341)
+   ![image](https://github.com/user-attachments/assets/7689a307-bf4f-4c5d-a396-fefce704b341)
 
-4) Click again on add credentials and give below mentioned details. (You should upload the contents of kubeconfig file here which can be found at cat ~/.kube/config)
+5) Click again on add credentials and give below mentioned details. (You should upload the contents of kubeconfig file here which can be found at cat ~/.kube/config)
 
-![image](https://github.com/user-attachments/assets/7ec573f8-f44b-40eb-a440-6c6fe2a78755)
+  ![image](https://github.com/user-attachments/assets/7ec573f8-f44b-40eb-a440-6c6fe2a78755)
 
 
 
@@ -113,7 +109,6 @@ kubectl get pods
 ---
 
 1) Go to Jenkins home page--> New item, provide below details and click ok
-
      i) Name: anything
      ii) item type: Pipeline  
 2) Provide Description if you want and scroll down to pipeline section
@@ -132,7 +127,7 @@ kubectl get pods
     
       iii) Which events would you like to trigger this webhook? ---> Just the push event
     
-      iv) chackmark the Active box and click Add Webhook.
+      iv) checkmark the Active box and click Add Webhook.
 
 ---
 
@@ -141,64 +136,52 @@ We have completed configuring our CI/CD pipeline. If we commit any changes to th
 
 ## Testing
 
-Let us make our first commit to github branch and see whether the jenkins pipeline is getting triggered.
-
-<img width="305" height="47" alt="image" src="https://github.com/user-attachments/assets/ad98ebc5-dbeb-4037-9be1-e57d28f6f313" />
+1) Let us make our first commit to github branch and see whether the jenkins pipeline is getting triggered.
 
 
-<img width="712" height="455" alt="image" src="https://github.com/user-attachments/assets/051c5560-2f69-4302-b303-2986f0591f31" />
+    a) We can see currently no pods are running
 
+     <img width="305" height="47" alt="image" src="https://github.com/user-attachments/assets/ad98ebc5-dbeb-4037-9be1-e57d28f6f313" />
 
-<img width="937" height="276" alt="image" src="https://github.com/user-attachments/assets/3f5bc463-3ce1-4f58-94dc-8cf84e93ddf7" />
+    b) We can also see there are no builds present in jenkins
 
-<img width="893" height="438" alt="image" src="https://github.com/user-attachments/assets/1726037b-027f-4ba0-bbba-944aba5d2959" />
+     <img width="712" height="455" alt="image" src="https://github.com/user-attachments/assets/051c5560-2f69-4302-b303-2986f0591f31" />
 
+    c) Now let's try commiting any change to github repository to see whether it is triggering the jenkins pipeline
 
-<img width="562" height="169" alt="image" src="https://github.com/user-attachments/assets/1e57ea92-84c4-40f3-94dd-c9474e0606af" />
+     <img width="937" height="276" alt="image" src="https://github.com/user-attachments/assets/3f5bc463-3ce1-4f58-94dc-8cf84e93ddf7" />
 
+    d) We can see that the jenkins pipeline is triggered and it is successful.
 
+     <img width="893" height="438" alt="image" src="https://github.com/user-attachments/assets/1726037b-027f-4ba0-bbba-944aba5d2959" />
 
-<img width="952" height="278" alt="image" src="https://github.com/user-attachments/assets/a8a5655c-6809-43f1-8203-f26d767e06fe" />
+    e) We can see new docker image is created and using that kubernetes pods are deployed with the help of jenkins pipeline
 
+     <img width="562" height="169" alt="image" src="https://github.com/user-attachments/assets/1e57ea92-84c4-40f3-94dd-c9474e0606af" />
 
-<img width="727" height="366" alt="image" src="https://github.com/user-attachments/assets/4a4ce3a8-7016-4b42-9a8d-da32edc5e7af" />
+    f) As we can see we are able to access the apache web server on port 32767, which is the port we exposed for accessing via node IP.
 
-<img width="943" height="365" alt="image" src="https://github.com/user-attachments/assets/b30dc33a-51e4-4f53-a75d-ed4daa73db35" />
+     <img width="952" height="278" alt="image" src="https://github.com/user-attachments/assets/a8a5655c-6809-43f1-8203-f26d767e06fe" />
 
+2) Now, Let's try to perform another commit to the github repo and see whether the jenkins pipeline is triggering and deploying kubernetes pods with updated image.
 
-<img width="922" height="400" alt="image" src="https://github.com/user-attachments/assets/db886494-9997-44f9-a0b0-597f5bf5f906" />
+    <img width="727" height="366" alt="image" src="https://github.com/user-attachments/assets/4a4ce3a8-7016-4b42-9a8d-da32edc5e7af" />
 
+    <img width="943" height="365" alt="image" src="https://github.com/user-attachments/assets/b30dc33a-51e4-4f53-a75d-ed4daa73db35" />
 
-<img width="566" height="185" alt="image" src="https://github.com/user-attachments/assets/dd24f7aa-e9f6-4e47-be5b-0e661b3f2ae5" />
+   a) We can see new jenkins build is triggered and is successful.
 
+    <img width="922" height="400" alt="image" src="https://github.com/user-attachments/assets/db886494-9997-44f9-a0b0-597f5bf5f906" />
 
-<img width="953" height="271" alt="image" src="https://github.com/user-attachments/assets/b27d934d-c203-4fea-8e21-8d6d42e04655" />
+   b) New pods are created with the updated index.html file
 
-<img width="935" height="421" alt="image" src="https://github.com/user-attachments/assets/38d2da1e-38f6-41f6-a9f3-d27fe4fdd289" />
+    <img width="566" height="185" alt="image" src="https://github.com/user-attachments/assets/dd24f7aa-e9f6-4e47-be5b-0e661b3f2ae5" />
 
+   c) Now let's try accessing the website again. we can see that the website is reflecting with updated content and the docker images are pushed to docker hub along with their build ID.
 
-commit screenshot
+    <img width="953" height="271" alt="image" src="https://github.com/user-attachments/assets/b27d934d-c203-4fea-8e21-8d6d42e04655" />
 
-jenkins screenshot
-
-docker hub screenshot
-
-kubernetes pod screenshot
-
-website screenshot
-
-
-Now, let us make one more commit and see whther the new changes are reflecting or not.
-
-commit screenshot
-
-jenkins screenshot
-
-docker hub screenshot
-
-kubernetes pod screenshot
-
-website screenshot
+    <img width="935" height="421" alt="image" src="https://github.com/user-attachments/assets/38d2da1e-38f6-41f6-a9f3-d27fe4fdd289" />
 
 
 As we can see, whenever a new commit is done to the github branch it is automatically triggering the jenkins pipeline and executing the required actions.
